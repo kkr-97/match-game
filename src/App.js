@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import IntroScreen from "./components/IntroScreen";
+import InstructionScreen from "./components/InstructionScreen";
+import ActivityScreen from "./components/ActivityScreen";
+import FinalScreen from "./components/FinalScreen";
+import "./App.css";
 
 function App() {
+  const [currentScreen, setCurrentScreen] = useState("intro");
+  const [bananas, setBananas] = useState(0);
+
+  const handleNextScreen = (screen) => {
+    setCurrentScreen(screen);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {currentScreen === "intro" && (
+        <IntroScreen onNext={() => handleNextScreen("instructions")} />
+      )}
+      {currentScreen === "instructions" && (
+        <InstructionScreen onNext={() => handleNextScreen("game")} />
+      )}
+      {currentScreen === "game" && (
+        <ActivityScreen
+          onFinish={(bananas) => {
+            setBananas(bananas);
+            handleNextScreen("final");
+          }}
+        />
+      )}
+      {currentScreen === "final" && <FinalScreen bananas={bananas} />}
     </div>
   );
 }
